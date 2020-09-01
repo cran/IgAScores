@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Matthew Jackson" />
+
+<meta name="date" content="2020-08-26" />
+
+<title>The IgAScores Package</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">The IgAScores Package</h1>
+<h4 class="author">Matthew Jackson</h4>
+<h4 class="date">2020-08-26</h4>
+
+
+
+<p>The IgAScores package provides functions to calculate IgA binding indices from IgA-Seq data sets.</p>
+<p>In IgA-Seq, bacteria within a sample are stained with an anti-IgA antibody and sorted into bound (IgA+) and unbound (IgA-) fractions. The taxonomy of these bacteria is then profiled using 16S rRNA gene sequencing of DNA amplified from the sorted fractions. The functions in this package generate scores of relative binding per taxon per sample from the resulting data.</p>
+<p>We recommend using the Probability Ratio to score IgA binding but make other scoring approaches available for comparison. See the <a href="https://github.com/microbialman/IgAScores">IgAScores paper</a> for a detailed consideration of IgA scoring methods.</p>
+<div id="input-data" class="section level2">
+<h2>Input data</h2>
+<p>The different scoring approaches require different inputs these can include:</p>
+<ul>
+<li>The abundance of the taxon in the IgA+ fraction - <strong>IgA+ abundance</strong></li>
+<li>The abundance of the taxon in the IgA- fraction - <strong>IgA- abundance</strong></li>
+<li>The fraction of all bacteria in the sample that are sorted into the IgA+ fraction - <strong>IgA+ size</strong></li>
+<li>The fraction of all bacteria in the sample that are sorted into the IgA- fraction - <strong>IgA- size</strong></li>
+<li>The abundance of the taxon in the sample pre-sorting - <strong>Presort abundance</strong></li>
+<li>A pseudo count to add to zero values - <strong>Pseudo</strong></li>
+</ul>
+<div id="example-data" class="section level4">
+<h4>Example data</h4>
+<p>Here we generate some dummy data to demonstrate the IgAScores functions.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">#load in IgAScores</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(IgAScores)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#dataframes with counts for the bacterial taxa in the IgA+ and IgA- fractions and presort sample, as would be produced by 16S rRNA appraoches such as DADA2</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">igapos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Sample1=</span><span class="kw">c</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">10</span>),<span class="dt">Sample2=</span><span class="kw">c</span>(<span class="dv">110</span>,<span class="dv">0</span>,<span class="dv">11</span>,<span class="dv">42</span>,<span class="dv">50</span>),<span class="dt">Sample3=</span><span class="kw">c</span>(<span class="dv">140</span>,<span class="dv">60</span>,<span class="dv">10</span>,<span class="dv">3</span>,<span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">iganeg &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Sample1=</span><span class="kw">c</span>(<span class="dv">200</span>,<span class="dv">0</span>,<span class="dv">40</span>,<span class="dv">20</span>,<span class="dv">4</span>),<span class="dt">Sample2=</span><span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">30</span>,<span class="dv">110</span>,<span class="dv">2</span>,<span class="dv">5</span>),<span class="dt">Sample3=</span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">20</span>,<span class="dv">0</span>,<span class="dv">123</span>,<span class="dv">20</span>))</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">presort &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Sample1=</span><span class="kw">c</span>(<span class="dv">150</span>,<span class="dv">10</span>,<span class="dv">50</span>,<span class="dv">30</span>,<span class="dv">5</span>),<span class="dt">Sample2=</span><span class="kw">c</span>(<span class="dv">100</span>,<span class="dv">30</span>,<span class="dv">115</span>,<span class="dv">20</span>,<span class="dv">10</span>),<span class="dt">Sample3=</span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">20</span>,<span class="dv">10</span>,<span class="dv">100</span>,<span class="dv">25</span>))</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">taxnames &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Taxon1&quot;</span>,<span class="st">&quot;Taxon2&quot;</span>,<span class="st">&quot;Taxon3&quot;</span>,<span class="st">&quot;Taxon4&quot;</span>,<span class="st">&quot;Taxon5&quot;</span>)</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="kw">rownames</span>(igapos) &lt;-<span class="st"> </span>taxnames</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">rownames</span>(iganeg) &lt;-<span class="st"> </span>taxnames</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw">rownames</span>(presort) &lt;-<span class="st"> </span>taxnames</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#convert the counts to relative abundances using the included helper function</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">igapos &lt;-<span class="st"> </span><span class="kw">relabund</span>(igapos)</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">iganeg &lt;-<span class="st"> </span><span class="kw">relabund</span>(iganeg)</a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">presort &lt;-<span class="st"> </span><span class="kw">relabund</span>(presort)</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="co">#iga+ and iga- fraction sizes per sample (fraction, if a percentage divide by 100)</span></a>
+<a class="sourceLine" id="cb1-20" data-line-number="20">possize &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Sample1=</span><span class="fl">0.04</span>,<span class="dt">Sample2=</span><span class="fl">0.05</span>,<span class="dt">Sample3=</span><span class="fl">0.03</span>)</a>
+<a class="sourceLine" id="cb1-21" data-line-number="21">negsize &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Sample1=</span><span class="fl">0.54</span>,<span class="dt">Sample2=</span><span class="fl">0.47</span>,<span class="dt">Sample3=</span><span class="fl">0.33</span>)</a>
+<a class="sourceLine" id="cb1-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="co">#set a pseudo count for handling zero values in some scoring methods</span></a>
+<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="co">#this should be of a similar value of the minimum non-zero observed value (e.g. if minum values is 0.007 use 0.001)</span></a>
+<a class="sourceLine" id="cb1-25" data-line-number="25">pseudo &lt;-<span class="st"> </span><span class="fl">0.001</span></a></code></pre></div>
+</div>
+</div>
+<div id="calculating-scores-for-all-taxa-and-samples-in-an-experiment" class="section level2">
+<h2>Calculating scores for all taxa and samples in an experiment</h2>
+<p>To calculate IgA scores across all of the taxa and samples in an experiment the <em>igascores()</em> function should be used. This enables calculation of all the different scores via the <em>method</em> argument, the requirements for each of the scores is shown below.</p>
+<table>
+<colgroup>
+<col width="19%"></col>
+<col width="13%"></col>
+<col width="67%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Score</th>
+<th align="left">Method name</th>
+<th align="left">Inputs required</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Probability Ratio</td>
+<td align="left">probratio</td>
+<td align="left">IgA+ abundance, IgA- abundance, IgA+ size, IgA- size, pseudo</td>
+</tr>
+<tr class="even">
+<td align="left">IgA+ Probability</td>
+<td align="left">prob</td>
+<td align="left">IgA+ abundance, Presort abundance, IgA+ size</td>
+</tr>
+<tr class="odd">
+<td align="left">Palm index</td>
+<td align="left">palm</td>
+<td align="left">IgA+ abundance, IgA- abundance, pseudo</td>
+</tr>
+<tr class="even">
+<td align="left">Kau index</td>
+<td align="left">kau</td>
+<td align="left">IgA+ abundance, IgA- abundance, pseudo</td>
+</tr>
+</tbody>
+</table>
+<p>For example, calculating the <strong>Probability Ratio</strong> on the example data:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">#default method is probratio</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">prscores &lt;-<span class="st"> </span><span class="kw">igascores</span>(<span class="dt">posabunds =</span> igapos, <span class="dt">negabunds =</span> iganeg, </a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">                      <span class="dt">possizes =</span> possize, <span class="dt">negsizes =</span> negsize, </a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">                      <span class="dt">pseudo =</span> pseudo)</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw">print</span>(prscores)</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt;           Sample1     Sample2    Sample3</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; Taxon1 -0.3505492 -0.02065829 -0.1340168</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; Taxon2         NA -0.65261507 -0.1903192</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; Taxon3 -0.5954181 -0.65482619  0.1272275</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; Taxon4 -0.4632094  0.06382045 -0.7238482</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; Taxon5 -0.1019485 -0.03272343 -0.5154269</span></a></code></pre></div>
+<p>Note the NA in Sample 1’s estimate for Taxon 2. This is because the taxa was not observed in either of the IgA+ or IgA- fractions. Adding a pseudo count to both would create an artificial estimate that might actually be higher than real observed values, thus IgAScores won’t score values absent in both fractions. This behavior can be controlled using the <em>nazeros</em> parameter, but it is recommended to leave this as default. Similarly, the Probability Ratio has a <em>scaleratio</em> parameter, this scales the values between -1 and 1 by adjusting for the size of the pseudo count, again it is recommended to leave this on by default.</p>
+<p>An example for the <em>IgA+ Probability</em></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">ppscores &lt;-<span class="st"> </span><span class="kw">igascores</span>(<span class="dt">posabunds =</span> igapos, <span class="dt">possizes =</span> possize, <span class="dt">presortabunds =</span> presort, <span class="dt">method=</span><span class="st">&quot;prob&quot;</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">print</span>(ppscores)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;            Sample1    Sample2      Sample3</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; Taxon1 0.057817109 0.07100939 0.1215962441</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; Taxon2 0.000000000 0.00000000 0.0781690141</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; Taxon3 0.001734513 0.00617473 0.0260563380</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; Taxon4 0.005781711 0.13556338 0.0007816901</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; Taxon5 0.173451327 0.32276995 0.0000000000</span></a></code></pre></div>
+<p>The IgA+ Probability is a direct estimate of the probability a bacteria will be bound to IgA and in the IgA+ fraction given that it belongs to the given taxon. Note that the opposite (the IgA- Probability) can be calculated by swapping out the IgA+ abundance and IgA+ size for the IgA- abundance and IgA- size.</p>
+<p>Examples for the <strong>Kau</strong> and <strong>Palm</strong> indices:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">kscores &lt;-<span class="st"> </span><span class="kw">igascores</span>(<span class="dt">posabunds =</span> igapos, <span class="dt">negabunds =</span> iganeg, <span class="dt">pseudo=</span>pseudo, <span class="dt">method=</span><span class="st">&quot;kau&quot;</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">print</span>(kscores)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt;           Sample1    Sample2    Sample3</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; Taxon1  0.3905989  0.6120783  0.6321241</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; Taxon2         NA -0.6144172  0.2823114</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; Taxon3 -0.4214603 -0.7851551  0.3891377</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; Taxon4 -0.2157185  0.4519001 -0.8066183</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; Taxon5  0.2618282  0.4054535 -0.5074027</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">pscores &lt;-<span class="st">  </span><span class="kw">igascores</span>(<span class="dt">posabunds =</span> igapos, <span class="dt">negabunds =</span> iganeg, <span class="dt">pseudo=</span>pseudo, <span class="dt">method=</span><span class="st">&quot;palm&quot;</span>)</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="kw">print</span>(pscores)</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt;           Sample1     Sample2     Sample3</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; Taxon1 1.16814159  8.10798122  4.22848200</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; Taxon2         NA  0.00000000  2.71830986</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; Taxon3 0.05840708  0.07370892 46.94835681</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; Taxon4 0.23362832 15.47887324  0.02210008</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; Taxon5 5.84070796  7.37089202  0.00000000</span></a></code></pre></div>
+<p>These methods implement the scores described by <a href="https://stm.sciencemag.org/content/7/276/276ra24">Kau et al.</a> and <a href="https://doi.org/10.1016/j.cell.2014.08.006">Palm et al.</a> respectively.</p>
+</div>
+<div id="calculating-scores-for-a-single-taxon-from-a-single-sample" class="section level2">
+<h2>Calculating scores for a single taxon from a single sample</h2>
+<p>For most experimental purposes the <em>igascores()</em> function will be more useful, and allows calculation of scores for all taxa across all samples in an experiment. But if a single taxon and sample are to be scored, such as for custom wrapping of the functions in other scripts, individual functions are available for the four methods:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">igaprobabilityratio</span>(<span class="dt">posabund =</span> igapos[<span class="dv">1</span>,<span class="dv">1</span>], <span class="dt">negabund =</span> iganeg[<span class="dv">1</span>,<span class="dv">1</span>], <span class="dt">possize =</span> possize[<span class="dv">1</span>], <span class="dt">negsize =</span> negsize[<span class="dv">1</span>], <span class="dt">pseudo =</span> pseudo)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt;    Sample1 </span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; -0.3505492</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw">igaprobability</span>(<span class="dt">withinabund =</span> igapos[<span class="dv">1</span>,<span class="dv">1</span>], <span class="dt">presortabund =</span> presort[<span class="dv">1</span>,<span class="dv">1</span>], <span class="dt">gatesize =</span> possize[<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt;    Sample1 </span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; 0.05781711</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="kw">kauindex</span>(<span class="dt">posabund =</span> igapos[<span class="dv">1</span>,<span class="dv">1</span>], <span class="dt">negabund =</span> iganeg[<span class="dv">1</span>,<span class="dv">1</span>], <span class="dt">pseudo =</span> pseudo)</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt; [1] 0.3905989</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="kw">palmindex</span>(<span class="dt">posabund =</span> igapos[<span class="dv">1</span>,<span class="dv">1</span>], <span class="dt">negabund =</span> iganeg[<span class="dv">1</span>,<span class="dv">1</span>], <span class="dt">pseudo =</span> pseudo)</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; [1] 1.168142</span></a></code></pre></div>
+</div>
+<div id="simulating-iga-seq-data" class="section level2">
+<h2>Simulating IgA-Seq data</h2>
+<p>Simulated IgA-Seq data is used to validate scoring approaches in the <a href="https://github.com/microbialman/IgAScores">IgAScores paper</a>. This can be replicated using the <em>simulateigaseq()</em> function. This has several parameters for customising the simulation, which are detailed in the functions documentation. The basic data returned by the simulation are shown below, these can then be used to calculate indices using the functions above.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">#run the simulation with defaults</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">simdata &lt;-<span class="st"> </span><span class="kw">simulateigaseq</span>()</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="kw">summary</span>(simdata)</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#&gt;               Length Class      Mode   </span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt; presortcounts 100    -none-     numeric</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt; presortabunds  10    data.frame list   </span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt; poscounts      10    data.frame list   </span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt; posabunds      10    data.frame list   </span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; negcounts      10    data.frame list   </span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt; negabunds      10    data.frame list   </span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt; possizes       10    -none-     numeric</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt; negsizes       10    -none-     numeric</span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; igabinding      3    data.frame list   </span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt; igavalmeans    10    -none-     numeric</span></a>
+<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt; igavalsds      10    -none-     numeric</span></a>
+<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt; posthresh       1    -none-     numeric</span></a>
+<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="co">#&gt; negthresh       1    -none-     numeric</span></a>
+<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="co">#&gt; expgroup       10    -none-     numeric</span></a>
+<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="co">#&gt; expspecies      0    -none-     NULL</span></a></code></pre></div>
+</div>
+<div id="additional-examples" class="section level2">
+<h2>Additional examples</h2>
+<p>Full analysis scripts demonstrating the use of IgAScores and how to compare IgA binding scores between different experimental conditions can be found in the <a href="https://github.com/microbialman/IgAScoresAnalyses">GitHub repository</a> containing the analyses from the paper.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
